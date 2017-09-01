@@ -90,7 +90,7 @@ public class Tile {
 					potentialCategories.Add (potentialCat);
 					if (potentialCat.type == category.type){ 
 						if (potentialCat.name == category.name){ 
-							catCounter.categories[potentialCat.name] *= 2f;
+							catCounter.categories[potentialCat.name] *= 2.5f;
 						} else {catCounter.categories[potentialCat.name] *= 1.5f;}
 					} else {catCounter.categories[potentialCat.name] *= 0.5f;}
 				}
@@ -106,8 +106,9 @@ public class Tile {
 		if (totalWeight > 0) {
 			tempCategory = GetCategory (potentialCategories.ToArray(), totalWeight);
 		} else {
-			int randomIndex = Random.Range (0, TileManager.instance.categories.Length);
-			tempCategory = TileManager.instance.categories [randomIndex];
+			tempCategory = category;
+			//int randomIndex = Random.Range (0, TileManager.instance.categories.Length);
+			//tempCategory = TileManager.instance.categories [randomIndex];
 		}
 		//Resetting Counters
 		catCounter.Reset();

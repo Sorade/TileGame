@@ -10,6 +10,7 @@ public class Tile {
 	TileCategory targetCategory;
 	public bool isLocked = false;
 	public GameObject skin;
+	CallbackBoxCollider bc;
 	TypeCounter typeCounter = ScriptableObject.CreateInstance("TypeCounter") as TypeCounter;
 	CategoryCounter catCounter = ScriptableObject.CreateInstance("CategoryCounter") as CategoryCounter ;
 	List<Vector2> neighborPositions =  new List<Vector2>(); // maybe needs to be a list
@@ -30,15 +31,16 @@ public class Tile {
 			newTarget = TileManager.instance.categories[(int) Random.Range(0f, TileManager.instance.categories.Length)];
 			targetCategory = newTarget;
 		}
-
 		SetSkin(row, col);
-
 	}
 
 	void SetSkin(int row, int col){
 		GameObject.Destroy (skin);	
 		skin = TileManager.instance.skins [category.skinID];
 		GameObject newSkin = GameObject.Instantiate (skin, new Vector3((float) row, 0f, (float) col), Quaternion.identity);
+		//newSkin.AddComponent<CallbackBoxCollider> ();
+		bc = newSkin.GetComponent<CallbackBoxCollider> ();
+		bc.parentTile = this;
 		skin = newSkin;
 	}
 
@@ -135,5 +137,8 @@ public class Tile {
 			randomNumber = randomNumber - catCounter.categories[category.name];
 		}
 		return selectedCategory ;
+	}
+
+	public void OnMouseOver (){
 	}
 }

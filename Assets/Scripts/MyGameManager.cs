@@ -5,7 +5,7 @@ using UnityEngine;
 public class MyGameManager : MonoBehaviour {
 
 	public static MyGameManager instance = null;
-	public Map map;
+	public Map map = new Map();
 	public int mapWidth;
 	public int mapHeight;
 
@@ -30,7 +30,7 @@ public class MyGameManager : MonoBehaviour {
 
     public void AddMap()
     {
-		map = new Map ();
+		//map = new Map ();
 		map.GenerateMap(mapWidth, mapHeight);
     }
 

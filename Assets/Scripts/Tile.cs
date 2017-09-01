@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile {
+public class Tile: MonoBehaviour {
 	
 	Vector2 pos;
 	TileCategory category;
@@ -10,12 +10,17 @@ public class Tile {
 	TileCategory targetCategory;
 	public bool isLocked = false;
 	public GameObject skin;
-	TypeCounter typeCounter = ScriptableObject.CreateInstance("TypeCounter") as TypeCounter;
-	CategoryCounter catCounter = ScriptableObject.CreateInstance("CategoryCounter") as CategoryCounter ;
+	TypeCounter typeCounter;
+	CategoryCounter catCounter;
 	List<Vector2> neighborPositions =  new List<Vector2>(); // maybe needs to be a list
 
 	List<int> rowsIndexToAdd;
 	List<int> colsIndexToAdd;
+
+	void Awake(){
+		typeCounter = ScriptableObject.CreateInstance("TypeCounter") as TypeCounter;
+		catCounter = ScriptableObject.CreateInstance("CategoryCounter") as CategoryCounter ;
+	}
 
 	public void Initialise(Vector2 currentPos, int row, int col){
 		pos = currentPos;
@@ -90,7 +95,7 @@ public class Tile {
 					potentialCategories.Add (potentialCat);
 					if (potentialCat.type == category.type){ 
 						if (potentialCat.name == category.name){ 
-							catCounter.categories[potentialCat.name] *= 2f;
+							catCounter.categories[potentialCat.name] *= 2.5f;
 						} else {catCounter.categories[potentialCat.name] *= 1.5f;}
 					} else {catCounter.categories[potentialCat.name] *= 0.5f;}
 				}
@@ -106,8 +111,9 @@ public class Tile {
 		if (totalWeight > 0) {
 			tempCategory = GetCategory (potentialCategories.ToArray(), totalWeight);
 		} else {
-			int randomIndex = Random.Range (0, TileManager.instance.categories.Length);
-			tempCategory = TileManager.instance.categories [randomIndex];
+			tempCategory = category;
+			//int randomIndex = Random.Range (0, TileManager.instance.categories.Length);
+			//tempCategory = TileManager.instance.categories [randomIndex];
 		}
 		//Resetting Counters
 		catCounter.Reset();

@@ -7,6 +7,7 @@ public class Map {
 	public Vector2 dimensions;	
 	//string[,] Tablero = new string[3,3];
 	public Tile[,] tiles; //array of tiles
+	public static GameObject tileHolder;
 
 	Vector2 currentPos;
 
@@ -34,13 +35,23 @@ public class Map {
 		dimensions.x = (float) W;
 		dimensions.y= (float) H;
 
-		tiles = new Tile[H+1,W+1];
+		bool isFirstMap = false;
+
+		if (tileHolder == null) {
+			tileHolder = new GameObject ("Tile Holder");
+			tiles = new Tile[H+1,W+1];
+			isFirstMap = true;
+		}
 
 		for (int row = 0; row < H; row++) {
 			for (int col = 0; col < W; col++) {
 				currentPos = new Vector2(row,col);
-				tiles [row, col] = new Tile ();
-				tiles [row, col].Initialise (currentPos, row, col);
+				if (isFirstMap) {
+					tiles [row, col] = tileHolder.AddComponent<Tile> ();//new Tile ();
+					tiles [row, col].Initialise (currentPos, row, col);
+				} else {					
+					tiles [row, col].Initialise (currentPos, row, col);
+				}
 			}
 		}
 

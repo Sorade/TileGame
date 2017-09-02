@@ -18,9 +18,7 @@ public class Map {
 
 		for (int row = 0; row < H; row++) {
 			for (int col = 0; col < W; col++) {
-				if (!tiles [row, col].isLocked) {					
-					tiles [row, col].RefreshTile ();
-				}
+				tiles [row, col].RefreshTile ();
 			}
 		}
 
@@ -48,7 +46,6 @@ public class Map {
 				if (isFirstMap == 1) {					
 					tiles [row, col] = new Tile ();
 					tiles [row, col].Initialise (currentPos, row, col);
-					Debug.Log ("first");
 				}
 				tiles [row, col].Initialise (currentPos, row, col);
 			}

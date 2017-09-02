@@ -26,6 +26,7 @@ public class MyGameManager : MonoBehaviour {
 
 	void Start(){
 		AddMap ();
+		Enchanter.instance.SetUp (mapWidth, mapHeight);
 	}
 
     public void AddMap()

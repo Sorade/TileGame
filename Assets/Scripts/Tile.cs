@@ -9,6 +9,7 @@ public class Tile {
 	TileCategory tempCategory;
 	TileCategory targetCategory;
 	public bool isLocked = false;
+	bool isEnchanted;
 	public GameObject skin;
 	CallbackBoxCollider bc;
 	TypeCounter typeCounter = ScriptableObject.CreateInstance("TypeCounter") as TypeCounter;
@@ -45,9 +46,6 @@ public class Tile {
 	}
 
 	public void AddNeighbors(int W, int H){
-		int posRow = (int) pos.x;
-		int posCol = (int) pos.y;
-
 		for (int r = -1; r < 2; r++) {
 			for (int c = -1; c < 2; c++) {
 				bool isTile = (pos == new Vector2 (r + pos.x, c + pos.y));
@@ -61,6 +59,14 @@ public class Tile {
 	}
 
 	public void RefreshTile(){		
+		if (!isLocked) {
+			GenerateNewCategory ();
+		}
+		Enchanter.instance.RemoveSpell (pos);
+		isEnchanted = false;
+	}
+
+	void GenerateNewCategory(){
 		List<string> elementList =  new List<string>();
 		foreach (var item in typeCounter.elements.Keys) {
 			elementList.Add (item);
@@ -80,7 +86,7 @@ public class Tile {
 					typeCounter.elements[currentElement] = j > 0 ? typeCounter.elements[currentElement] + j : typeCounter.elements[currentElement]; //if > to 0
 				}
 			}
-				
+
 			foreach (var potentialCat in TileManager.instance.categories) {
 				//Can be made how many times?
 				if (potentialCat.type == currentElement){
@@ -122,6 +128,7 @@ public class Tile {
 		SetSkin ((int) pos.x, (int) pos.y);
 		if (category.name == targetCategory.name) {
 			isLocked = true;
+			Debug.Log (pos.x + "x" + pos.y + " is locked");
 		}
 	}
 
@@ -140,5 +147,14 @@ public class Tile {
 	}
 
 	public void OnMouseOver (){
+		if (Input.GetMouseButtonDown (0) && !isEnchanted) {
+			Enchant ();
+			Debug.Log ("Pressed Tile at " + pos.x + "x" + pos.y);
+		}
+	}
+
+	void Enchant(){
+		isEnchanted = true;
+		Enchanter.instance.EnchantTile (pos, typeCounter);
 	}
 }

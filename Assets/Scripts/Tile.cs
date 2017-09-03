@@ -128,7 +128,7 @@ public class Tile {
 		SetSkin ((int) pos.x, (int) pos.y);
 		if (category.name == targetCategory.name) {
 			isLocked = true;
-			Debug.Log (pos.x + "x" + pos.y + " is locked");
+			//Debug.Log (pos.x + "x" + pos.y + " is locked");
 		}
 	}
 

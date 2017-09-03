@@ -41,7 +41,20 @@ public class Enchanter : MonoBehaviour {
 	}
 
 	public void SetUp(int W, int H){
+		if (spellEffects != null) {
+			ResetAll ();
+		}
 		spellEffects = new GameObject[H + 1,W + 1];
+	}
+
+	void ResetAll(){
+		for (int r = 0; r < spellEffects.GetLength(0); r++) {
+			for (int c = 0; c < spellEffects.GetLength(1); c++) {
+				if (spellEffects [r, c] != null) {
+					Destroy (spellEffects [r, c]);
+				}
+			}
+		}
 	}
 
 	public void PlaceSpell(Vector2 pos){

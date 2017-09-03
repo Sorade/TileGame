@@ -25,6 +25,10 @@ public class MyGameManager : MonoBehaviour {
 	#endregion //Singleton setup
 
 	void Start(){
+		StartNewGame ();
+	}
+
+	public void StartNewGame(){
 		AddMap ();
 		Enchanter.instance.SetUp (mapWidth, mapHeight);
 	}

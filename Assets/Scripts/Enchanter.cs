@@ -41,19 +41,15 @@ public class Enchanter : MonoBehaviour {
 	}
 
 	public void SetUp(int W, int H){
-		if (spellEffects != null) {
-			ResetAll ();
-		}
+		ResetAll ();
 		spellEffects = new GameObject[H + 1,W + 1];
 	}
 
 	void ResetAll(){
-		for (int r = 0; r < spellEffects.GetLength(0); r++) {
-			for (int c = 0; c < spellEffects.GetLength(1); c++) {
-				if (spellEffects [r, c] != null) {
-					Destroy (spellEffects [r, c]);
-				}
-			}
+		Debug.Log (GameObject.FindGameObjectsWithTag ("Spell").Length);
+		foreach (GameObject item in GameObject.FindGameObjectsWithTag("Spell")) {
+			Debug.Log (item);
+			Destroy (item);
 		}
 	}
 
@@ -68,6 +64,7 @@ public class Enchanter : MonoBehaviour {
 		RemoveSpell(pos);
 		GameObject[] newComponents = MakeSpell ();
 		spellEffects[w,h] = new GameObject("Spell");
+		spellEffects [w, h].tag = "Spell";
 		spellEffects[w,h].transform.position = new Vector3 (pos.x, 0f, pos.y);
 		foreach (var component in newComponents) {
 			GameObject newComponent = GameObject.Instantiate(component, new Vector3(pos.x, 0f, pos.y), Quaternion.identity);//might need to set to 0

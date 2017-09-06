@@ -46,7 +46,6 @@ public class Enchanter : MonoBehaviour {
 	}
 
 	void ResetAll(){
-		Debug.Log (GameObject.FindGameObjectsWithTag ("Spell").Length);
 		foreach (GameObject item in GameObject.FindGameObjectsWithTag("Spell")) {
 			Debug.Log (item);
 			Destroy (item);
@@ -90,7 +89,6 @@ public class Enchanter : MonoBehaviour {
 		int h = (int)pos.y;
 		if (spellEffects[w,h] != null) {
 			Destroy (spellEffects [w, h]);
-			Debug.Log ("Removed Spell");
 		}
 	}
 

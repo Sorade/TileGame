@@ -22,14 +22,14 @@ public class Tile {
 	public void Initialise(Vector2 currentPos, int row, int col){
 		pos = currentPos;
 		//a few iterations of the resolve method should smooth the map up
-		TileCategory newCat = TileManager.instance.categories[(int) Random.Range(0f, TileManager.instance.categories.Length)];
+		TileCategory newCat = TileManager.instance.categories[(int) Random.Range(0, (int) TileManager.instance.categories.Length)];
 		category = newCat;
 
-		TileCategory newTarget = TileManager.instance.categories[(int) Random.Range(0f, TileManager.instance.categories.Length)];
+		TileCategory newTarget = TileManager.instance.categories[(int) Random.Range(0, (int) TileManager.instance.categories.Length)];
 		targetCategory = newTarget;
 
 		while (category.name == targetCategory.name) {
-			newTarget = TileManager.instance.categories[(int) Random.Range(0f, TileManager.instance.categories.Length)];
+			newTarget = TileManager.instance.categories[(int) Random.Range(0, (int) TileManager.instance.categories.Length)];
 			targetCategory = newTarget;
 		}
 		SetSkin(row, col);
@@ -94,13 +94,14 @@ public class Tile {
 				}
 
 				//Applying modifiers
-				if (catCounter.categories[potentialCat.name] > 0) {
+				if (catCounter.categories[potentialCat.name] > 0) {					
+					ApplyModifiers (potentialCat);
 					potentialCategories.Add (potentialCat);
-					if (potentialCat.type == category.type){ 
-						if (potentialCat.name == category.name){ 
-							catCounter.categories[potentialCat.name] *= 2.5f;
-						} else {catCounter.categories[potentialCat.name] *= 1.5f;}
-					} else {catCounter.categories[potentialCat.name] *= 0.5f;}
+//					if (potentialCat.type == category.type){ 
+//						if (potentialCat.name == category.name){ 
+//							catCounter.categories[potentialCat.name] *= 2f;
+//						} else {catCounter.categories[potentialCat.name] *= 1.5f;}
+//					} else {catCounter.categories[potentialCat.name] *= 0.5f;}
 				}
 			}
 		}
@@ -122,26 +123,56 @@ public class Tile {
 		catCounter.Reset();
 		typeCounter.Reset();
 	}
-		
+
+	void ApplyModifiers(TileCategory cat){
+		if (isEnchanted) {		
+			if (cat.type == category.type) {
+				if (cat.level > category.level) { 
+					catCounter.categories [cat.name] *= 2f;
+				} else if (cat.name == category.name) {
+					catCounter.categories [cat.name] *= 2.5f;
+				} else if (cat.level < category.level) {
+					catCounter.categories [cat.name] *= 0.1f;
+				}
+			} else if (cat.level > category.level) { 
+				catCounter.categories [cat.name] *= 2f;
+			} else {
+				catCounter.categories [cat.name] *= 0.5f;
+			}
+		} else {
+			if (cat.type == category.type) { 
+				if (cat.name == category.name) { 
+					catCounter.categories [cat.name] *= 2f;
+				} else if (cat.name == category.name && cat.level > 1) { 
+					catCounter.categories [cat.name] = 8f;
+				}else {
+					catCounter.categories [cat.name] *= 1.5f;
+				}
+			} else {
+				catCounter.categories [cat.name] *= 0.5f;
+			}
+		}
+	}
+
 	public void ApplyRefresh(){
 		category = tempCategory;
 		SetSkin ((int) pos.x, (int) pos.y);
-		if (category.name == targetCategory.name) {
+		if (category.name == targetCategory.name && !isLocked) {
 			isLocked = true;
-			//Debug.Log (pos.x + "x" + pos.y + " is locked");
+			GameObject.Instantiate (TileManager.instance.revealedSkin, new Vector3 (pos.x, 0.5f, pos.y), Quaternion.identity);
 		}
 	}
 
 	public TileCategory GetCategory (TileCategory[] categories, float totalWeight){
 		// totalWeight is the sum of all Categorys’ weight
-		float randomNumber = Random.Range(0, totalWeight);
+		float randomNumber = Random.Range(0f, totalWeight);
 		TileCategory selectedCategory  = null;
-		foreach (TileCategory  category in categories){
-			if (randomNumber <= catCounter.categories[category.name]){
-				selectedCategory = category ;
+		foreach (TileCategory  cat in categories){
+			if (randomNumber <= catCounter.categories[cat.name]){
+				selectedCategory = cat ;
 				break;
 			}
-			randomNumber = randomNumber - catCounter.categories[category.name];
+			randomNumber = randomNumber - catCounter.categories[cat.name];
 		}
 		return selectedCategory ;
 	}

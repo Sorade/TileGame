@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TileManager : MonoBehaviour {
+	public GameObject revealedSkin;
 	public GameObject[] skins;
 	public static TileManager instance = null;
 	public TileCategory[] categories; //fill by hand in the inspector

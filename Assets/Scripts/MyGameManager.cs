@@ -31,6 +31,9 @@ public class MyGameManager : MonoBehaviour {
 	public void StartNewGame(){
 		AddMap ();
 		Enchanter.instance.SetUp (mapWidth, mapHeight);
+		foreach (var item in GameObject.FindGameObjectsWithTag("LevelResettable")) {
+			Destroy(item);
+		}
 	}
 
     public void AddMap()

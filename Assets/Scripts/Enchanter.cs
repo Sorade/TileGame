@@ -6,6 +6,7 @@ public class Enchanter : MonoBehaviour {
 
 	public static Enchanter instance = null;
 	public GameObject[] spellComponentPrefabs;
+	public int modifier;
 	Dictionary<string, GameObject> spellComponents = new Dictionary<string, GameObject> ();
 	TypeCounter tc;
 	GameObject[,] spellEffects;
@@ -114,7 +115,7 @@ public class Enchanter : MonoBehaviour {
 	public void GetEnchantement(TypeCounter tileCounter){
 		EventManager.TriggerEvent (AllEvents.enchantmentOccured);
 		foreach (var elementType in tc.elements.Keys) {
-			tileCounter.elements[elementType] += tc.elements [elementType];//
+			tileCounter.elements[elementType] += (tc.elements [elementType] * modifier);//
 		}
 	}
 

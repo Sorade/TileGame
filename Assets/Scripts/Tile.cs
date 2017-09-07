@@ -15,6 +15,7 @@ public class Tile {
 	TypeCounter typeCounter = ScriptableObject.CreateInstance("TypeCounter") as TypeCounter;
 	CategoryCounter catCounter = ScriptableObject.CreateInstance("CategoryCounter") as CategoryCounter ;
 	List<Vector2> neighborPositions =  new List<Vector2>(); // maybe needs to be a list
+	private Gem gem;
 
 	List<int> rowsIndexToAdd;
 	List<int> colsIndexToAdd;
@@ -62,6 +63,7 @@ public class Tile {
 		if (!isLocked) {
 			GenerateNewCategory ();
 		}
+		gem = GemController.instance.GenerateGem (tempCategory.type, pos);
 		Enchanter.instance.RemoveSpell (pos);
 		isEnchanted = false;
 	}
@@ -74,7 +76,9 @@ public class Tile {
 
 		List<TileCategory> potentialCategories = new List<TileCategory> ();
 
-		foreach (var currentElement in elementList) {			
+		typeCounter.elements [category.type] += category.level;
+
+		foreach (var currentElement in elementList) {
 			//counts available pool
 			foreach( var n in neighborPositions){ //iterates through the neighbors positions
 				int W = (int) n.x;
@@ -82,7 +86,7 @@ public class Tile {
 
 				if (MyGameManager.instance.map.tiles[W,H].category.type == currentElement)
 				{
-					int j = MyGameManager.instance.map.tiles [W, H].category.level - 1;
+					int j = MyGameManager.instance.map.tiles [W, H].category.level - 0;
 					typeCounter.elements[currentElement] = j > 0 ? typeCounter.elements[currentElement] + j : typeCounter.elements[currentElement]; //if > to 0
 				}
 			}
@@ -141,7 +145,6 @@ public class Tile {
 		TileCategory selectedCategory  = null;
 		foreach (TileCategory  cat in categories){
 			if (pos == new Vector2(2f,2f)) {
-				Debug.Log (pos+"  "+cat.name);
 			}
 			if (randomNumber <= catCounter.categories[cat.name]){
 				selectedCategory = cat ;
@@ -153,7 +156,10 @@ public class Tile {
 	}
 
 	public void OnMouseOver (){
-		if (Input.GetMouseButtonDown (0) && !isEnchanted) {
+		if (Input.GetMouseButtonDown (0) && gem != null) {
+			GemController.instance.CollectGem (ref gem);
+		}
+		else if (Input.GetMouseButtonDown (0) && !isEnchanted) {
 			Enchant ();
 			Debug.Log ("Pressed Tile at " + pos.x + "x" + pos.y);
 		}

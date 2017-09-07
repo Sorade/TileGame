@@ -82,7 +82,7 @@ public class Tile {
 
 				if (MyGameManager.instance.map.tiles[W,H].category.type == currentElement)
 				{
-					int j = MyGameManager.instance.map.tiles [W,H].category.level - 1;
+					int j = MyGameManager.instance.map.tiles [W, H].category.level - 1;
 					typeCounter.elements[currentElement] = j > 0 ? typeCounter.elements[currentElement] + j : typeCounter.elements[currentElement]; //if > to 0
 				}
 			}
@@ -90,18 +90,12 @@ public class Tile {
 			foreach (var potentialCat in TileManager.instance.categories) {
 				//Can be made how many times?
 				if (potentialCat.type == currentElement){
-					catCounter.categories[potentialCat.name]  += typeCounter.elements[currentElement] / potentialCat.level;
-				}
-
-				//Applying modifiers
-				if (catCounter.categories[potentialCat.name] > 0) {					
-					ApplyModifiers (potentialCat);
-					potentialCategories.Add (potentialCat);
-//					if (potentialCat.type == category.type){ 
-//						if (potentialCat.name == category.name){ 
-//							catCounter.categories[potentialCat.name] *= 2f;
-//						} else {catCounter.categories[potentialCat.name] *= 1.5f;}
-//					} else {catCounter.categories[potentialCat.name] *= 0.5f;}
+					catCounter.categories[potentialCat.name]  += (typeCounter.elements[currentElement] / (float) potentialCat.level);
+					//Applying modifiers
+					if (catCounter.categories[potentialCat.name] > 0) {					
+						ApplyModifiers (potentialCat);
+						potentialCategories.Add (potentialCat);
+					}
 				}
 			}
 		}
@@ -125,33 +119,11 @@ public class Tile {
 	}
 
 	void ApplyModifiers(TileCategory cat){
-		if (isEnchanted) {		
-			if (cat.type == category.type) {
-				if (cat.level > category.level) { 
-					catCounter.categories [cat.name] *= 2f;
-				} else if (cat.name == category.name) {
-					catCounter.categories [cat.name] *= 2.5f;
-				} else if (cat.level < category.level) {
-					catCounter.categories [cat.name] *= 0.1f;
-				}
-			} else if (cat.level > category.level) { 
-				catCounter.categories [cat.name] *= 2f;
-			} else {
-				catCounter.categories [cat.name] *= 0.5f;
-			}
+		if (cat.level == 1) { 
+			catCounter.categories [cat.name] /= 2f;
 		} else {
-			if (cat.type == category.type) { 
-				if (cat.name == category.name) { 
-					catCounter.categories [cat.name] *= 2f;
-				} else if (cat.name == category.name && cat.level > 1) { 
-					catCounter.categories [cat.name] = 8f;
-				}else {
-					catCounter.categories [cat.name] *= 1.5f;
-				}
-			} else {
-				catCounter.categories [cat.name] *= 0.5f;
-			}
-		}
+			catCounter.categories [cat.name] = (float) (int) catCounter.categories [cat.name];
+		}			
 	}
 
 	public void ApplyRefresh(){
@@ -168,6 +140,9 @@ public class Tile {
 		float randomNumber = Random.Range(0f, totalWeight);
 		TileCategory selectedCategory  = null;
 		foreach (TileCategory  cat in categories){
+			if (pos == new Vector2(2f,2f)) {
+				Debug.Log (pos+"  "+cat.name);
+			}
 			if (randomNumber <= catCounter.categories[cat.name]){
 				selectedCategory = cat ;
 				break;

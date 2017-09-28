@@ -15,9 +15,10 @@ public class Tile {
 	TypeCounter typeCounter = ScriptableObject.CreateInstance("TypeCounter") as TypeCounter;
 	CategoryCounter catCounter = ScriptableObject.CreateInstance("CategoryCounter") as CategoryCounter ;
 	List<Vector2> neighborPositions =  new List<Vector2>(); // maybe needs to be a list
-	private Gem gem;
+	public Gem gem = null;
+    private float gemGenerationProba = 0.25f;
 
-	List<int> rowsIndexToAdd;
+    List<int> rowsIndexToAdd;
 	List<int> colsIndexToAdd;
 
 	public void Initialise(Vector2 currentPos, int row, int col){
@@ -33,11 +34,12 @@ public class Tile {
 			newTarget = TileManager.instance.categories[(int) Random.Range(0, (int) TileManager.instance.categories.Length)];
 			targetCategory = newTarget;
 		}
-		SetSkin(row, col);
+        GameObject.Destroy(skin);
+        SetSkin(row, col);
 	}
 
 	void SetSkin(int row, int col){
-		GameObject.Destroy (skin);	
+		//GameObject.Destroy (skin);	
 		skin = TileManager.instance.skins [category.skinID];
 		GameObject newSkin = GameObject.Instantiate (skin, new Vector3((float) row, 0f, (float) col), Quaternion.identity);
 		//newSkin.AddComponent<CallbackBoxCollider> ();
@@ -60,10 +62,16 @@ public class Tile {
 	}
 
 	public void RefreshTile(){		
+        //the the true terrain has not been found generate a new tile
 		if (!isLocked) {
 			GenerateNewCategory ();
 		}
-		gem = GemController.instance.GenerateGem (tempCategory.type, pos);
+        //generates a gem with random probability
+        if (Random.Range(0f,1f) <= gemGenerationProba)
+        {
+            gem = GemController.instance.GenerateGem(tempCategory.type, pos);
+        }
+		
 		Enchanter.instance.RemoveSpell (pos);
 		isEnchanted = false;
 	}
@@ -130,9 +138,11 @@ public class Tile {
 		}			
 	}
 
+    //Assigns the newly generated category to the tile and generates the appropriate skin
 	public void ApplyRefresh(){
 		category = tempCategory;
-		SetSkin ((int) pos.x, (int) pos.y);
+        GameObject.Destroy(skin);
+        SetSkin ((int) pos.x, (int) pos.y);
 		if (category.name == targetCategory.name && !isLocked) {
 			isLocked = true;
 			GameObject.Instantiate (TileManager.instance.revealedSkin, new Vector3 (pos.x, 0.5f, pos.y), Quaternion.identity);
@@ -158,10 +168,11 @@ public class Tile {
 	public void OnMouseOver (){
 		if (Input.GetMouseButtonDown (0) && gem != null) {
 			GemController.instance.CollectGem (ref gem);
-		}
+            //Debug.Log("Collected Gem at " + pos.x + "x" + pos.y);
+        }
 		else if (Input.GetMouseButtonDown (0) && !isEnchanted) {
 			Enchant ();
-			Debug.Log ("Pressed Tile at " + pos.x + "x" + pos.y);
+			//Debug.Log ("Pressed Tile at " + pos.x + "x" + pos.y);
 		}
 	}
 

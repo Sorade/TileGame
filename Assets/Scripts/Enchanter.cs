@@ -97,17 +97,18 @@ public class Enchanter : MonoBehaviour {
 		tc.Reset ();
 	}
 
-	/*Add a Charge(string elementType) method to the Enchanter. 
-	 * It needs to typeCounter[elementType] += 1; 
+	/* It needs to typeCounter[elementType] += 1; 
 	 * up to a maximum of 3, and loop back to 0 (not omitting to remove 3 from the counter).
 	 */
-	public void Charge(string elementType){
-		if (tc.elements [elementType] <= 3) {
+	public int Charge(string elementType){
+        //if enough gems are available performs the charge, otherwise resets the charge counter
+		if (tc.elements [elementType] < Mathf.Min(4, GemController.instance.gemCounter.elements[elementType])) {
 			tc.elements [elementType] += 1;
 		} else {
 			tc.elements [elementType] = 0;
 		}
-	}
+        return tc.elements[elementType];
+    }
 
 	/*add GetEnchantement(TypeCounter tc) method
 	 * which adds the Enchanter typeCounter to that of the tile to be enchanted. 

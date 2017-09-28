@@ -16,24 +16,18 @@ public class EnchantingButton : MonoBehaviour {
 		EventManager.StopListening (AllEvents.enchantmentOccured, ResetButton);
 	}
 
-	// Use this for initialization
 	void Awake () {
 		iconSlot = gameObject.GetComponent<Image> ();
 	}
 	
-	// Update is called once per frame
 	void ResetButton () {
 		iconSlot.sprite = icons [0];
 		currentIconIndex = 0;
 	}
 
+    //Calls the enchanting function on the enchanter and assigns the corresponding icon to the button
 	public void Charge (string elementType){
-		if (currentIconIndex < 3) {
-			currentIconIndex += 1;
-			Enchanter.instance.Charge (elementType);
-		} else {
-			currentIconIndex = 0;
-		}
-		iconSlot.sprite = icons [currentIconIndex];
+        currentIconIndex = Enchanter.instance.Charge (elementType);
+        iconSlot.sprite = icons [currentIconIndex];
 	}
 }

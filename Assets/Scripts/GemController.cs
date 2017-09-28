@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GemController : MonoBehaviour {
-	TypeCounter tc;
+	public TypeCounter gemCounter;
 	public static GemController instance = null;
 	public GameObject[] gemObjects;
 	float gemHeight = 0.3f;
 	Dictionary<string, GameObject> gems = new Dictionary<string, GameObject> ();
+    GameObject gemCounterUI;
+    string UItext;
 
 	#region
 	//Awake is always called before any Start functions
@@ -22,12 +25,13 @@ public class GemController : MonoBehaviour {
 			//Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
 			Destroy(gameObject);
 	}
-	#endregion //Singleton setup
+    #endregion //Singleton setup
 
-	void Start () {
+    void Start () {
 		GenerateGemPrefabDictionary ();
-		tc = ScriptableObject.CreateInstance ("TypeCounter") as TypeCounter;
-	}
+		gemCounter = ScriptableObject.CreateInstance ("TypeCounter") as TypeCounter;
+        gemCounterUI = GameObject.FindGameObjectWithTag("GemCounter");
+    }
 	
 	void GenerateGemPrefabDictionary(){
 		//safety check
@@ -55,9 +59,16 @@ public class GemController : MonoBehaviour {
 	}
 
 	public void CollectGem(ref Gem gem){
-		tc.elements [gem.elementType] += 1;
+		gemCounter.elements [gem.elementType] += 1;
 		Destroy(gem.skin);
 		gem = null;
-		Debug.Log (tc.elements ["Fire"] + "/" + tc.elements ["Water"] + "/" + tc.elements ["Earth"]);
-	}
+        UpdateGemCounterUI();
+        //Debug.Log (gemCounter.elements ["Fire"] + "/" + gemCounter.elements ["Water"] + "/" + gemCounter.elements ["Earth"]);
+    }
+
+    void UpdateGemCounterUI()
+    {
+        UItext = "Fire: " + gemCounter.elements["Fire"] + "  Water: " + gemCounter.elements["Water"] + "  Earth: " + gemCounter.elements["Earth"];
+        gemCounterUI.GetComponent<Text>().text = UItext;
+    }
 }

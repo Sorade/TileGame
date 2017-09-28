@@ -18,7 +18,11 @@ public class Map {
 
 		for (int row = 0; row < H; row++) {
 			for (int col = 0; col < W; col++) {
-				tiles [row, col].RefreshTile ();
+                if (tiles[row, col].gem != null)
+                {
+                    GemController.instance.CollectGem(ref tiles[row, col].gem);
+                }
+                tiles [row, col].RefreshTile ();
 			}
 		}
 

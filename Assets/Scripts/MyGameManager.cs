@@ -43,6 +43,8 @@ public class MyGameManager : MonoBehaviour {
 
     public void RefreshMap()
     {
+        
 		map.RefreshMap ();
+        EventManager.TriggerEvent(AllEvents.turnEnded);
     }
 }

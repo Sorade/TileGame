@@ -31,9 +31,11 @@ public class MyGameManager : MonoBehaviour {
 	public void StartNewGame(){
 		AddMap ();
 		Enchanter.instance.SetUp (mapWidth, mapHeight);
-		foreach (var item in GameObject.FindGameObjectsWithTag("LevelResettable")) {
-			Destroy(item);
-		}
+        GemController.instance.SetUp();
+        //not used for the moment
+		//foreach (var item in GameObject.FindGameObjectsWithTag("LevelResettable")) {
+		//	Destroy(item);
+		//}
 	}
 
     public void AddMap()
@@ -45,6 +47,5 @@ public class MyGameManager : MonoBehaviour {
     {
         
 		map.RefreshMap ();
-        EventManager.TriggerEvent(AllEvents.turnEnded);
     }
 }

@@ -63,12 +63,25 @@ public class GemController : MonoBehaviour {
 		Destroy(gem.skin);
 		gem = null;
         UpdateGemCounterUI();
-        //Debug.Log (gemCounter.elements ["Fire"] + "/" + gemCounter.elements ["Water"] + "/" + gemCounter.elements ["Earth"]);
     }
 
     void UpdateGemCounterUI()
     {
         UItext = "Fire: " + gemCounter.elements["Fire"] + "  Water: " + gemCounter.elements["Water"] + "  Earth: " + gemCounter.elements["Earth"];
         gemCounterUI.GetComponent<Text>().text = UItext;
+    }
+
+    public void SetUp()
+    {
+        gemCounter = ScriptableObject.CreateInstance("TypeCounter") as TypeCounter;
+        if (gemCounterUI != null)
+        {
+            UpdateGemCounterUI();
+        }
+
+        foreach (var item in GameObject.FindGameObjectsWithTag("Gem"))
+        {
+            Destroy(item);
+        }
     }
 }

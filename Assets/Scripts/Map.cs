@@ -52,6 +52,8 @@ public class Map {
 					tiles [row, col].Initialise (currentPos, row, col);
 				}
 				tiles [row, col].Initialise (currentPos, row, col);
+                //needed when a new map is generated after the first one
+                tiles[row, col].gem = null;
 			}
 		}
 

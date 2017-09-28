@@ -104,9 +104,11 @@ public class Tile {
 				if (potentialCat.type == currentElement){
 					catCounter.categories[potentialCat.name]  += (typeCounter.elements[currentElement] / (float) potentialCat.level);
 					//Applying modifiers
-					if (catCounter.categories[potentialCat.name] > 0) {					
-						ApplyModifiers (potentialCat);
-						potentialCategories.Add (potentialCat);
+                    //Will avoid the targetcategory unless the player has enchanted the tile
+					if (catCounter.categories[potentialCat.name] > 0)
+                    {
+                        ApplyModifiers(potentialCat);
+                        potentialCategories.Add(potentialCat);
 					}
 				}
 			}
@@ -120,6 +122,10 @@ public class Tile {
 		float totalWeight = sum;
 		if (totalWeight > 0) {
 			tempCategory = GetCategory (potentialCategories.ToArray(), totalWeight);
+            if (tempCategory == targetCategory && !isEnchanted)
+            {
+                tempCategory = category;
+            }
 		} else {
 			tempCategory = category;
 			//int randomIndex = Random.Range (0, TileManager.instance.categories.Length);

@@ -102,8 +102,9 @@ public class Enchanter : MonoBehaviour {
 	 */
 	public int Charge(string elementType){
         //if enough gems are available performs the charge, otherwise resets the charge counter
-		if (tc.elements [elementType] < Mathf.Min(4, GemController.instance.gemCounter.elements[elementType])) {
-			tc.elements [elementType] += 1;
+        if (tc.elements[elementType] < Mathf.Min(3, GemController.instance.gemCounter.elements[elementType] + tc.elements[elementType]))
+        {
+            tc.elements [elementType] += 1;
             GemController.instance.AddToCounter(elementType, -1);
         }
         else {

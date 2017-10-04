@@ -71,6 +71,12 @@ public class GemController : MonoBehaviour {
         gemCounterUI.GetComponent<Text>().text = UItext;
     }
 
+    public void AddToCounter(string elementName, int value)
+    {
+        gemCounter.elements[elementName] += value;
+        UpdateGemCounterUI();
+    }
+
     public void SetUp()
     {
         gemCounter = ScriptableObject.CreateInstance("TypeCounter") as TypeCounter;

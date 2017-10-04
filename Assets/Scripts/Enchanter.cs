@@ -104,8 +104,11 @@ public class Enchanter : MonoBehaviour {
         //if enough gems are available performs the charge, otherwise resets the charge counter
 		if (tc.elements [elementType] < Mathf.Min(4, GemController.instance.gemCounter.elements[elementType])) {
 			tc.elements [elementType] += 1;
-		} else {
-			tc.elements [elementType] = 0;
+            GemController.instance.AddToCounter(elementType, -1);
+        }
+        else {
+            GemController.instance.AddToCounter(elementType, tc.elements[elementType]);
+            tc.elements [elementType] = 0;
 		}
         return tc.elements[elementType];
     }
@@ -123,6 +126,6 @@ public class Enchanter : MonoBehaviour {
 	public void EnchantTile(Vector2 targetPosition, TypeCounter targetCounter){
 		GetEnchantement (targetCounter);
 		PlaceSpell (targetPosition);
-		ResetCounter ();
+        ResetCounter ();
 	}
 }

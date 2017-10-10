@@ -9,7 +9,7 @@ public class Tile {
 	TileCategory tempCategory;
 	TileCategory targetCategory;
 	public bool isLocked = false;
-	bool isEnchanted;
+	public bool isEnchanted;
 	public GameObject skin;
 	CallbackBoxCollider bc;
 	TypeCounter typeCounter = ScriptableObject.CreateInstance("TypeCounter") as TypeCounter;
@@ -38,7 +38,27 @@ public class Tile {
 		}
         GameObject.Destroy(skin);
         SetSkin(row, col);
-	}
+        InstantiateInfoVFX();
+    }
+
+    void InstantiateInfoVFX()
+    {
+        if (targetCategory.type == "Fire")
+        {
+            GameObject.Instantiate(TileManager.instance.infoSkins[0], new Vector3((float)pos.x, 0f, (float)pos.y), Quaternion.identity);
+            Debug.Log("instantiate fire effect at " + TileManager.instance.infoSkins[0]);
+        } else if (targetCategory.type == "Water")
+        {
+            GameObject.Instantiate(TileManager.instance.infoSkins[1], new Vector3((float)pos.x, 0f, (float)pos.y), Quaternion.identity);
+        } else if (targetCategory.type == "Earth")
+        {
+            GameObject.Instantiate(TileManager.instance.infoSkins[2], new Vector3((float)pos.x, 0f, (float)pos.y), Quaternion.identity);
+        }
+        else
+        {
+            Debug.Log("Target Category type : " + targetCategory.type + "  does not exist, info vfx could not be generated.");
+        }
+    }
 
 	void SetSkin(int row, int col){
 		//GameObject.Destroy (skin);	
@@ -75,7 +95,7 @@ public class Tile {
             tempCategory = category;
         }
         //the the true terrain has not been found generate a new tile
-		if (!isLocked && hasNewCat)
+		if (!isLocked && (hasNewCat || isEnchanted))
         {
 			GenerateNewCategory ();
 		}
@@ -196,7 +216,6 @@ public class Tile {
 	}
 
 	void Enchant(){
-		isEnchanted = true;
-		Enchanter.instance.EnchantTile (pos, typeCounter);
+		isEnchanted = Enchanter.instance.EnchantTile (pos, typeCounter);
 	}
 }

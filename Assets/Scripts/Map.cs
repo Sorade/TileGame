@@ -28,10 +28,7 @@ public class Map {
 
 		for (int row = 0; row < H; row++) {
 			for (int col = 0; col < W; col++) {
-                if (tiles[row, col].hasNewCat)
-                {
-                    tiles[row, col].ApplyRefresh();
-                }
+                tiles[row, col].ApplyRefresh();
 			}
 		}
 	}

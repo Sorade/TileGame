@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GemController : MonoBehaviour {
 	public TypeCounter gemCounter;
@@ -9,8 +10,7 @@ public class GemController : MonoBehaviour {
 	public GameObject[] gemObjects;
 	float gemHeight = 0.3f;
 	Dictionary<string, GameObject> gems = new Dictionary<string, GameObject> ();
-    GameObject gemCounterUI;
-    string UItext;
+    public GemCounterUI gemCounterUI;
 
 	#region
 	//Awake is always called before any Start functions
@@ -30,7 +30,6 @@ public class GemController : MonoBehaviour {
     void Start () {
 		GenerateGemPrefabDictionary ();
 		gemCounter = ScriptableObject.CreateInstance ("TypeCounter") as TypeCounter;
-        gemCounterUI = GameObject.FindGameObjectWithTag("GemCounter");
     }
 	
 	void GenerateGemPrefabDictionary(){
@@ -67,8 +66,9 @@ public class GemController : MonoBehaviour {
 
     void UpdateGemCounterUI()
     {
-        UItext = "Fire: " + gemCounter.elements["Fire"] + "  Water: " + gemCounter.elements["Water"] + "  Earth: " + gemCounter.elements["Earth"];
-        gemCounterUI.GetComponent<Text>().text = UItext;
+        gemCounterUI.textFire.SetText("<color=\"red\">{0}", gemCounter.elements["Fire"]);
+        gemCounterUI.textWater.SetText("<color=#0000FF>{0}", gemCounter.elements["Water"]);
+        gemCounterUI.textEarth.SetText("<#005500FF>{0}", gemCounter.elements["Earth"]);
     }
 
     public void AddToCounter(string elementName, int value)

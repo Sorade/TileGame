@@ -32,10 +32,10 @@ public class MyGameManager : MonoBehaviour {
 		AddMap ();
 		Enchanter.instance.SetUp (mapWidth, mapHeight);
         GemController.instance.SetUp();
-        //not used for the moment
-		//foreach (var item in GameObject.FindGameObjectsWithTag("LevelResettable")) {
-		//	Destroy(item);
-		//}
+        //used to remove the revelead effect
+		foreach (var item in GameObject.FindGameObjectsWithTag("LevelResettable")) {
+			Destroy(item);
+		}
 	}
 
     public void AddMap()

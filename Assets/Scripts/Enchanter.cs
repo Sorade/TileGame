@@ -10,6 +10,7 @@ public class Enchanter : MonoBehaviour {
 	Dictionary<string, GameObject> spellComponents = new Dictionary<string, GameObject> ();
 	TypeCounter tc;
 	GameObject[,] spellEffects;
+    bool successfulPlacement;
 
 	//Awake is always called before any Start functions
 	void Awake()
@@ -53,10 +54,10 @@ public class Enchanter : MonoBehaviour {
 		}
 	}
 
-	public void PlaceSpell(Vector2 pos){
+	public bool PlaceSpell(Vector2 pos){
 		if (tc.Sum() == 0) {
 			Debug.Log ("Not Enough Gems Used");
-			return;
+			return false;
 		}
 		int w = (int)pos.x;
 		int h = (int)pos.y;
@@ -70,6 +71,7 @@ public class Enchanter : MonoBehaviour {
 			GameObject newComponent = GameObject.Instantiate(component, new Vector3(pos.x, 0f, pos.y), Quaternion.identity);//might need to set to 0
 			newComponent.transform.SetParent (spellEffects[w,h].transform);
 		}
+        return true;
 	}
 
 	GameObject[] MakeSpell(){
@@ -124,9 +126,14 @@ public class Enchanter : MonoBehaviour {
 		}
 	}
 
-	public void EnchantTile(Vector2 targetPosition, TypeCounter targetCounter){
+	public bool EnchantTile(Vector2 targetPosition, TypeCounter targetCounter){
 		GetEnchantement (targetCounter);
-		PlaceSpell (targetPosition);
-        ResetCounter ();
+        successfulPlacement = PlaceSpell(targetPosition);
+        if (successfulPlacement)
+        {
+            ResetCounter();
+            return true;
+        }
+        return false;
 	}
 }

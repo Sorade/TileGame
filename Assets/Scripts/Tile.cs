@@ -17,6 +17,8 @@ public class Tile {
 	List<Vector2> neighborPositions =  new List<Vector2>(); // maybe needs to be a list
 	public Gem gem = null;
     private float gemGenerationProba = 0.25f;
+    private float selectNewCatProba = 0.5f;
+    public bool hasNewCat;
 
     List<int> rowsIndexToAdd;
 	List<int> colsIndexToAdd;
@@ -61,9 +63,20 @@ public class Tile {
 		}
 	}
 
-	public void RefreshTile(){		
+	public void RefreshTile(){
+
+        if (Random.Range(0f,1f) < selectNewCatProba)
+        {
+            hasNewCat = true;
+        }
+        else
+        {
+            hasNewCat = false;
+            tempCategory = category;
+        }
         //the the true terrain has not been found generate a new tile
-		if (!isLocked) {
+		if (!isLocked && hasNewCat)
+        {
 			GenerateNewCategory ();
 		}
         //generates a gem with random probability

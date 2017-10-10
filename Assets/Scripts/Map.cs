@@ -22,13 +22,16 @@ public class Map {
                 {
                     GemController.instance.CollectGem(ref tiles[row, col].gem);
                 }
-                tiles [row, col].RefreshTile ();
+                tiles[row, col].RefreshTile();
 			}
 		}
 
 		for (int row = 0; row < H; row++) {
 			for (int col = 0; col < W; col++) {
-				tiles[row,col].ApplyRefresh();
+                if (tiles[row, col].hasNewCat)
+                {
+                    tiles[row, col].ApplyRefresh();
+                }
 			}
 		}
 	}

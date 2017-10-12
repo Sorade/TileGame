@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MyGameManager : MonoBehaviour {
 
@@ -8,10 +9,12 @@ public class MyGameManager : MonoBehaviour {
 	public Map map = new Map ();
 	public int mapWidth;
 	public int mapHeight;
+    int score;
+    public TextMeshProUGUI textScore;
 
-	#region
-	//Awake is always called before any Start functions
-	void Awake()
+    #region
+    //Awake is always called before any Start functions
+    void Awake()
 	{
 		//Check if instance already exists
 		if (instance == null)
@@ -29,7 +32,8 @@ public class MyGameManager : MonoBehaviour {
 	}
 
 	public void StartNewGame(){
-		AddMap ();
+        ResetScore();
+        AddMap ();
 		Enchanter.instance.SetUp (mapWidth, mapHeight);
         GemController.instance.SetUp();
         //used to remove the revelead effect
@@ -45,7 +49,27 @@ public class MyGameManager : MonoBehaviour {
 
     public void RefreshMap()
     {
-        
-		map.RefreshMap ();
+        UpdateScore();
+        map.RefreshMap ();
+    }
+
+    public void UpdateScore()
+    {
+        score += 1;
+        textScore.SetText("{0}", score);
+    }
+
+    private void ResetScore()
+    {
+        score = 0;
+        textScore.SetText("{0}", score);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown("escape"))
+        {
+            Application.Quit();
+        }
     }
 }

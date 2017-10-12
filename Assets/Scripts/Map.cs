@@ -47,9 +47,9 @@ public class Map {
 		for (int row = 0; row < H; row++) {
 			for (int col = 0; col < W; col++) {
 				currentPos = new Vector2(row,col);
+                //On first time creates the tiles
 				if (isFirstMap == 1) {					
 					tiles [row, col] = new Tile ();
-					tiles [row, col].Initialise (currentPos, row, col);
 				}
 				tiles [row, col].Initialise (currentPos, row, col);
                 //needed when a new map is generated after the first one

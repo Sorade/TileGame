@@ -17,16 +17,18 @@ public class Tile {
 	List<Vector2> neighborPositions =  new List<Vector2>(); // maybe needs to be a list
 	public Gem gem = null;
     private float gemGenerationProba = 0.25f;
-    private float selectNewCatProba = 0.5f;
+    private float selectNewCatProba = 0.1f;
     public bool hasNewCat;
+    bool infoSpawned;
 
     List<int> rowsIndexToAdd;
 	List<int> colsIndexToAdd;
 
+
 	public void Initialise(Vector2 currentPos, int row, int col){
 		pos = currentPos;
-		//a few iterations of the resolve method should smooth the map up
-		TileCategory newCat = TileManager.instance.categories[(int) Random.Range(0, (int) TileManager.instance.categories.Length)];
+        //a few iterations of the resolve method should smooth the map up
+        TileCategory newCat = TileManager.instance.categories[(int) Random.Range(0, (int) TileManager.instance.categories.Length)];
 		category = newCat;
 
 		TileCategory newTarget = TileManager.instance.categories[(int) Random.Range(0, (int) TileManager.instance.categories.Length)];
@@ -38,21 +40,22 @@ public class Tile {
 		}
         GameObject.Destroy(skin);
         SetSkin(row, col);
-        InstantiateInfoVFX();
     }
 
-    void InstantiateInfoVFX()
+    public void InstantiateInfoVFX()
     {
         if (targetCategory.type == "Fire")
         {
-            GameObject.Instantiate(TileManager.instance.infoSkins[0], new Vector3((float)pos.x, 0f, (float)pos.y), Quaternion.identity);
-            Debug.Log("instantiate fire effect at " + TileManager.instance.infoSkins[0]);
-        } else if (targetCategory.type == "Water")
+            GameObject.Instantiate(TileManager.instance.infoSkins[0], new Vector3(pos.x, 0.3f, pos.y), Quaternion.identity);
+        }
+        else if (targetCategory.type == "Water")
         {
-            GameObject.Instantiate(TileManager.instance.infoSkins[1], new Vector3((float)pos.x, 0f, (float)pos.y), Quaternion.identity);
-        } else if (targetCategory.type == "Earth")
+            GameObject.Instantiate(TileManager.instance.infoSkins[1], new Vector3(pos.x, 0.3f, pos.y), Quaternion.identity);
+
+        }
+        else if (targetCategory.type == "Earth")
         {
-            GameObject.Instantiate(TileManager.instance.infoSkins[2], new Vector3((float)pos.x, 0f, (float)pos.y), Quaternion.identity);
+            GameObject.Instantiate(TileManager.instance.infoSkins[2], new Vector3(pos.x, 0.3f, pos.y), Quaternion.identity);
         }
         else
         {
@@ -60,7 +63,7 @@ public class Tile {
         }
     }
 
-	void SetSkin(int row, int col){
+    void SetSkin(int row, int col){
 		//GameObject.Destroy (skin);	
 		skin = TileManager.instance.skins [category.skinID];
 		GameObject newSkin = GameObject.Instantiate (skin, new Vector3((float) row, 0f, (float) col), Quaternion.identity);
@@ -84,6 +87,11 @@ public class Tile {
 	}
 
 	public void RefreshTile(){
+        if (!infoSpawned)
+        {
+            InstantiateInfoVFX();
+            infoSpawned = true;
+        }
 
         if (Random.Range(0f,1f) < selectNewCatProba)
         {
